@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}">
+  <script src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/popper.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>  
+  <title>Chat Summarization</title>
+</head>
+
+<body class="body" background="{{ url_for('static', filename='images/bck_home.jpg') }}">
+
+<div class="container">
+	<div class="wrapper">
+	  <div id="formContent">    
+			<form>	
+			  <br><br>
+			  <h2 style="color:red">Chat Summarization</h2>
+			  <br>
+			  <label style="width:25%;text-align:center;font-weight: bold;"> Enter Transcript</label><br><br>
+			  <textarea id="Transcript"  name="Transcript" rows="12" cols="70"></textarea>
+			  <input style="background-color:green" type="button"  value="Submit" onclick="submitChat()">
+				<div id="overlay" class="hidden"></div>
+				<div id="popupDialog" class="hidden">
+					<h2 style="color:blue">Edit AI Generated Chat Summary</h2>
+					<input type="text" id ="retmsg" name ="retmsg"><br>
+					<input type="checkbox" id="checkval" name="checkval" value="Yes">
+					<label for="checkval"> Accept AI Generated Chat Summary</label><br>
+					<button onclick="openFn()">Submit Summary</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+ 
+  
+<script>
+function submitChat()
+{
+	var Transcript   = $('#Transcript').val()
+	if(Transcript =="")
+	{
+		alert('Please Enter Transcript');
+		return;
+	}
+	
+	$.post('/summarizeTranscript', 
+	{
+		Transcript :Transcript
+	}, function(result) 
+	{		    
+		const over = document.getElementById("overlay");
+		const popDialog = document.getElementById("popupDialog");
+		$('#retmsg').val(result.msg);		
+		over.classList.toggle("hidden");
+		popDialog.classList.toggle("hidden");
+		popDialog.style.opacity =popDialog.style.opacity ==="1"? "0": "1";
+		  
+		 
+	});		
+	const over = document.getElementById("overlay");
+	const popDialog = document.getElementById("popupDialog");
+	document.getElementById('replace-me').innerText(someVar)
+	over.classList.toggle("hidden");
+	popDialog.classList.toggle("hidden");
+	popDialog.style.opacity =popDialog.style.opacity ==="1"? "0": "1";
+	
+}
+function openFn()
+{
+	const over = document.getElementById("overlay");
+	const popDialog = document.getElementById("popupDialog");
+	over.classList.toggle("hidden");
+	popDialog.classList.toggle("hidden");
+	popDialog.style.opacity =popDialog.style.opacity ==="1"? "0": "1";
+}
+
+ </script>
+</body>
+</html>
