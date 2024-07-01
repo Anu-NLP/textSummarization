@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}">
+  <script src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/popper.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>  
+  <title>Chat Summarization</title>
+</head>
+
+<body class="body" background="{{ url_for('static', filename='images/bck_home.jpg') }}">
+
+
+<div id="popupDialog" class="hidden">
+	<h2 style="color:blue;">Edit AI Generated Chat Summary</h2><br>
+	<textarea id="retmsg"  name="retmsg" rows="12" cols="60"></textarea>
+	<br>
+	<input type="checkbox" id="checkval" name="checkval" value="Yes">
+	<label for="checkval"> Accept AI Generated Chat Summary</label><br>
+	<button onclick="openFn()">Submit Summary</button>
+</div>	
+
+
+			
+
+<div class="container">
+	<div class="wrapper">
+	  <div id="formContent">    
+			<form>			
+				  <br><br><h2 style="color:red">Chat Summarization</h2><br>
+				  <div>
+					  <label style="width:25%;text-align:center;font-weight: bold;" for="model">Choose Model</label>
+					  <select name="model" id="model">
+						  <option value="Facebook" selected>Facebook</option>
+						  <option value="Google">Google</option>
+					  </select><br>
+					  
+					  <label style="width:25%;text-align:center;font-weight: bold;"> Enter Transcript</label><br><br>
+					  <textarea id="Transcript"  name="Transcript" rows="12" cols="70"></textarea>
+					  <input style="background-color:green" type="button"  value="Submit" onclick="submitChat()">
+				  </div>
+			  </form>		  
+		</div>
+	</div>
+</div>
+<div id="popupDialog2" class="hidden">
+	<h2 style="color:blue"> Summary Preview</h2><br>
+	<textarea id="PreviewMsg"  name="PreviewMsg" rows="5" cols="60" disabled></textarea>
+	<br>
+	<button onclick="closeFn()">Close Preview</button>
+</div>
+ 
+  
+<script>
+function submitChat()
+{
+	var Transcript   = $('#Transcript').val()
+	var model   = $('#model').val()
+	if(Transcript =="")
+	{
+		alert('Please Enter Transcript');
+		return;
+	}
+	
+	$.post('/summarizeTranscript', 
+	{
+		Transcript :Transcript,model:model
+	}, function(result) 
+	{		    
+		$('#retmsg').val(result.msg);
+		
+		const popDialog = document.getElementById("popupDialog");
+		popDialog.classList.toggle("hidden");
+		popDialog.style.opacity =popDialog.style.opacity ==="1"? "0": "1";		  
+		 
+	});			
+}
+function openFn()
+{	
+	const popDialog = document.getElementById("popupDialog");
+	popDialog.classList.toggle("hidden");
+	popDialog.style.opacity = 0
+	
+	$('#PreviewMsg').val($('#retmsg').val())
+
+	const popDialog2 = document.getElementById("popupDialog2");
+	popDialog2.classList.toggle("hidden");
+	popDialog2.style.opacity = 1	
+}
+
+
+function closeFn()
+{	
+	
+	const popDialog2 = document.getElementById("popupDialog2");
+	popDialog2.classList.toggle("hidden");
+	popDialog2.style.opacity =0;
+}
+
+ </script>
+</body>
+</html>

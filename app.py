@@ -28,9 +28,10 @@ def render_default():
 @app.route("/summarizeTranscript",methods=['GET', 'POST'] )    
 def summarizeTranscript():
     Transcript  = request.form.get('Transcript')
+    model       = request.form.get('model')
     message     = """  Summary Block """
-    d = {"error":"none","msg":Transcript}   
-    return flask.jsonify(d)        
+    d = {"error":"none","msg":Transcript+"-"+model}   
+    return flask.jsonify(d)  
 
 if __name__ == '__main__':
     app.debug = True

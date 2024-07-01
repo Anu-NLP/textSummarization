@@ -20,18 +20,30 @@
 			<form>	
 			  <br><br>
 			  <h2 style="color:red">Chat Summarization</h2>
+			  
 			  <br>
-			  <label style="width:25%;text-align:center;font-weight: bold;"> Enter Transcript</label><br><br>
-			  <textarea id="Transcript"  name="Transcript" rows="12" cols="70"></textarea>
-			  <input style="background-color:green" type="button"  value="Submit" onclick="submitChat()">
+			  <div>
+				  <label style="width:25%;text-align:center;font-weight: bold;" for="model">Choose Model</label>
+				  <select name="model" id="model">
+					  <option value="Facebook" selected>Facebook</option>
+					  <option value="Google">Google</option>
+				  </select><br>
+				  
+				  <label style="width:25%;text-align:center;font-weight: bold;"> Enter Transcript</label><br><br>
+				  <textarea id="Transcript"  name="Transcript" rows="12" cols="70"></textarea>
+				  <input style="background-color:green" type="button"  value="Submit" onclick="submitChat()">
+			  </div>
+			  <div>
 				<div id="overlay" class="hidden"></div>
 				<div id="popupDialog" class="hidden">
-					<h2 style="color:blue">Edit AI Generated Chat Summary</h2>
-					<input type="text" id ="retmsg" name ="retmsg"><br>
+					<h2 style="color:blue">Edit AI Generated Chat Summary</h2><br>
+					<textarea id="retmsg"  name="retmsg" rows="12" cols="60"></textarea>
+					<br>
 					<input type="checkbox" id="checkval" name="checkval" value="Yes">
 					<label for="checkval"> Accept AI Generated Chat Summary</label><br>
 					<button onclick="openFn()">Submit Summary</button>
 				</div>
+			</div>
 			</form>
 		</div>
 	</div>
@@ -43,6 +55,7 @@
 function submitChat()
 {
 	var Transcript   = $('#Transcript').val()
+	var model   = $('#model').val()
 	if(Transcript =="")
 	{
 		alert('Please Enter Transcript');
@@ -51,7 +64,7 @@ function submitChat()
 	
 	$.post('/summarizeTranscript', 
 	{
-		Transcript :Transcript
+		Transcript :Transcript,model:model
 	}, function(result) 
 	{		    
 		const over = document.getElementById("overlay");
@@ -73,11 +86,15 @@ function submitChat()
 }
 function openFn()
 {
-	const over = document.getElementById("overlay");
-	const popDialog = document.getElementById("popupDialog");
-	over.classList.toggle("hidden");
-	popDialog.classList.toggle("hidden");
-	popDialog.style.opacity =popDialog.style.opacity ==="1"? "0": "1";
+	if ($('#checkval').is(':checked'))
+	{
+		const over = document.getElementById("overlay");
+		const popDialog = document.getElementById("popupDialog");
+		over.classList.toggle("hidden");
+		popDialog.classList.toggle("hidden");
+		popDialog.style.opacity =popDialog.style.opacity ==="1"? "0": "1";
+	}
+	else{alert("Please confirm check box");return;}
 }
 
  </script>
