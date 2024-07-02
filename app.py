@@ -11,7 +11,7 @@ import time
 import random
 import pandas as pd
 import flask
-from transformers import BartForConditionalGeneration, BartTokenizer ,PegasusForConditionalGeneration, PegasusTokenizer
+from transformers import BartForConditionalGeneration, BartTokenizer ,PegasusForConditionalGeneration, PegasusTokenizer, T5ForConditionalGeneration, T5Tokenizer
 
 
 # Load the pre-trained BART model and tokenizer
@@ -23,6 +23,11 @@ fbtokenizer    = BartTokenizer.from_pretrained(fbmodel_name)
 gcp_model_name = 'google/pegasus-xsum'
 gcp_model      = PegasusForConditionalGeneration.from_pretrained(gcp_model_name)
 gcp_tokenizer  = PegasusTokenizer.from_pretrained(gcp_model_name)
+
+# Load the pre-trained T5 model and tokenizer
+T5_model_name = 't5-small'
+T5_model = T5ForConditionalGeneration.from_pretrained(T5_model_name)
+T5_tokenizer = T5Tokenizer.from_pretrained(T5_model_name)
 
 app = Flask(__name__)
 app.secret_key = 'file_upload_key'
@@ -48,7 +53,16 @@ def gcp_summarize_chat(chat_text):
     return summary
 
 
+def T5_summarize_chat(chat_text):
+    # Tokenize the input text
+    inputs = tokenizer.encode("summarize: " + chat_text, return_tensors='pt', max_length=1024, truncation=True)
 
+    # Generate the summary
+    summary_ids = model.generate(inputs, max_length=150, min_length=40, length_penalty=2.0, num_beams=4, early_stopping=True)
+
+    # Decode the summary
+    summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
+    return summary
 
 @app.route("/summarizeTranscript",methods=['GET', 'POST'] )    
 def summarizeTranscript():
@@ -59,7 +73,10 @@ def summarizeTranscript():
         summary = fb_summarize_chat(Transcript)
     elif model  == "Google" : 
         summary = gcp_summarize_chat(Transcript)
-    d = {"error":"none","msg":summary}   
+    elif model  == "T5" : 
+        summary = T5_summarize_chat(Transcript)
+    d = {"error":"none","msg":summary} 
+    print(summary)
     return flask.jsonify(d)  
 
 if __name__ == '__main__':
