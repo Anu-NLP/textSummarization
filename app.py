@@ -49,26 +49,28 @@ def fb_summarize_chat(chat_text):
 def gcp_summarize_chat(chat_text):
     inputs = gcp_tokenizer.encode(chat_text, return_tensors='pt', max_length=1024, truncation=True)
     summary_ids = gcp_model.generate(inputs, max_length=150, min_length=40, length_penalty=2.0, num_beams=4, early_stopping=True)
-    summary = gcp_model.decode(summary_ids[0], skip_special_tokens=True)
+    summary = gcp_tokenizer.decode(summary_ids[0], skip_special_tokens=True)
     return summary
 
 
 def T5_summarize_chat(chat_text):
     # Tokenize the input text
-    inputs = tokenizer.encode("summarize: " + chat_text, return_tensors='pt', max_length=1024, truncation=True)
+    inputs = T5_tokenizer.encode("summarize: " + chat_text, return_tensors='pt', max_length=1024, truncation=True)
 
     # Generate the summary
-    summary_ids = model.generate(inputs, max_length=150, min_length=40, length_penalty=2.0, num_beams=4, early_stopping=True)
+    summary_ids = T5_model.generate(inputs, max_length=150, min_length=40, length_penalty=2.0, num_beams=4, early_stopping=True)
 
     # Decode the summary
-    summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
+    summary = T5_tokenizer.decode(summary_ids[0], skip_special_tokens=True)
     return summary
 
 @app.route("/summarizeTranscript",methods=['GET', 'POST'] )    
 def summarizeTranscript():
     Transcript  = request.form.get('Transcript')
+    print(Transcript)
     model       = request.form.get('model')
-    summary     = ""
+    print(model)
+    summary     = "sample"
     if model    == "Facebook":
         summary = fb_summarize_chat(Transcript)
     elif model  == "Google" : 
@@ -77,9 +79,10 @@ def summarizeTranscript():
         summary = T5_summarize_chat(Transcript)
     d = {"error":"none","msg":summary} 
     print(summary)
+    print(model)
     return flask.jsonify(d)  
 
 if __name__ == '__main__':
-    app.debug = True
+    app.debug = False
     app.run()
 
