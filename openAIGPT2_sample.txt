@@ -1,0 +1,68 @@
+from transformers import GPT2Tokenizer, GPT2LMHeadSure! Here's an example of chat summarization using OpenAI's GPT-2 model:  
+  
+```python  
+from transformers import GPT2Tokenizer, GPT2LMHeadModel  
+  
+# LoadSure! Here's an example of chat summarization using the OpenAI GPT-2 model:  
+  
+```python  
+from transformers import GPT2Tokenizer, GPT2LMHeadModel  
+  
+# LoadModel  
+  
+# Load pre-trained model and tokenizer  
+tokenizer = GPT2Tokenizer.from_pretrained('gpt2')  
+model = GPT2LMHeadModel.from_pretrained('gpt2')  
+  
+ pre-trained model and tokenizer  
+model = GPT2LMHeadModel.from_pretrained('gpt2')  
+tokenizer = GPT2Tokenizer.from_pretrained('gpt2')  
+  
+# Define the chat the GPT-2 tokenizer and model  
+tokenizer# Define the conversation  
+conversation = [  
+    {"speaker": "User", = GPT2Tokenizer.from_pretrained("gpt2")  
+model = GPT2LMHeadModel.from_pretrained("gpt2")  
+  
+# "text": "What's the weather like today?"},  
+    {"speaker": "Assistant", "text": "The weather conversation  
+chat_history = """  
+User: Can you help me find information about the history of Rome?  
+Assistant: Sure! Rome is an ancient city with a rich history. It Define the chat conversation  
+chat = """  
+User: What's the weather like today?  
+Assistant: The weather is sunny with a temperature of 25°C.  
+User: Great! Any chance of rain tomorrow was founded in 753 BC and went on to become the capital of the Roman Empire. The empire lasted for over 500 years, during which Rome is sunny with a temperature of 25°C."},  
+    {"speaker": "User", "text": "Any chance of rain in the evening?"},  
+    {"speaker": "Assistant", "text": "There is a slight chance of rain in the evening."},  
+]  
+  
+# Prepare input for the model  
+ became a center of culture, architecture, and governanceinput_ids = []  
+for i, utterance in enumerate(conversation):  
+   ?  
+Assistant: There is a 30% chance of rain tomorrow.  
+User. It's known for its iconic landmarks like the Colosseum and the Roman Forum. Is there anything specific you would: Thanks for the info!  
+"""  
+  
+# Tokenize the chat conversation  
+inputs = tokenizer.encode(chat, input_ids.extend(tokenizer.encode(utterance["speaker"] + ": " + utterance["text like to know?  
+User: I'm interested in learning about the Roman emperors.  
+Assistant: The Roman Empire had several notable emperors,"]))  
+  
+# Generate chat summary  
+output = model.generate(torch.tensor([input return_tensors="pt")  
+  
+# Generate the chat summary  
+summary_ids = model.generate(inputs, max_length=200, num_beams=4, no_repeat_ngram_size=2, early_stopping_ids]))  
+summary = tokenizer.decode(output[0], skip_special_tokens=True, clean_up_tokenization_spaces=True)  
+  
+# Trim summary to maximum 200 characters including Julius Caesar, Augustus, Nero, and Marcus Aurelius. Each emperor had a unique impact on the empire and its history. Would you like more information about a specific=True)  
+summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)  
+  
+# Print the chat summary  
+print("Chat Summary:", summary)  
+``  
+summary = summary[:200]  
+  
+print(summary)  
